@@ -8,6 +8,8 @@ use LWP::UserAgent;
 use Date::Manip;
 use strict;
 
+use HTML::FormatText::W3m;
+
 my %opt = (
   prefix => $ENV{RSSDROP_PREFIX} || "$ENV{HOME}/.rssdrop",
   fetch => 1,
@@ -248,6 +250,10 @@ sub drop_item {
   }
 
   $content ||= slurp_file($fetchfile);
+
+  if(looks_like_html($content)) {
+    $content = HTML::FormatText::W3m->format_string($content);
+  }
 
   my $mime;
 
